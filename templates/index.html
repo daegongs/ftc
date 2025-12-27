@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FTC Law-Navigator | 관리 시스템</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&family=Noto+Sans+KR:wght@300;400;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --bg-dark: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f1f5f9;
+            --text-dim: #94a3b8;
+            --accent: #10b981;
+            --info: #0ea5e9;
+            --danger: #ef4444;
+            --glass: rgba(30, 41, 59, 0.7);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', 'Noto Sans KR', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            line-height: 1.4;
+            min-height: 100vh;
+            background-image:
+                radial-gradient(circle at 20% 20%, rgba(79, 70, 229, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 80% 80%, rgba(16, 185, 129, 0.05) 0%, transparent 40%);
+        }
+
+        .container {
+            max-width: 1550px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            padding: 0 10px;
+        }
+
+        .brand-group {
+            display: flex;
+            align-items: baseline;
+            gap: 15px;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #fff 0%, var(--text-dim) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            color: var(--text-dim);
+            font-size: 0.95rem;
+        }
+
+        .controls-card {
+            background: var(--glass);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 10px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .input-inline {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        select {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            padding: 6px 12px;
+            color: white;
+            font-size: 0.9rem;
+            min-width: 200px;
+            cursor: pointer;
+            outline: none;
+        }
+
+        select option {
+            background: var(--bg-dark);
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.85rem;
+            color: white;
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+
+        .btn-info {
+            background: var(--info);
+        }
+
+        .btn-info:hover:not(:disabled) {
+            background: #0284c7;
+            transform: translateY(-1px);
+        }
+
+        .btn-success {
+            background: var(--accent);
+        }
+
+        .btn-success:hover:not(:disabled) {
+            background: #059669;
+            transform: translateY(-1px);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+        }
+
+        .btn-danger:hover:not(:disabled) {
+            background: #dc2626;
+            transform: translateY(-1px);
+        }
+
+        .btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        #progress-section {
+            display: none;
+            margin-bottom: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 10px 20px;
+            border-radius: 8px;
+        }
+
+        .progress-container {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            height: 6px;
+            overflow: hidden;
+            margin-top: 5px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            color: var(--text-dim);
+            font-size: 0.8rem;
+        }
+
+        .results-section {
+            background: var(--glass);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            max-height: calc(100vh - 200px);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            table-layout: fixed;
+        }
+
+        th {
+            background: rgba(15, 23, 42, 0.9);
+            padding: 12px 15px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--text-dim);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            white-space: nowrap;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Column Widths */
+        th:nth-child(1) {
+            width: 140px;
+        }
+
+        /* 법령군 */
+        th:nth-child(2) {
+            width: 100px;
+        }
+
+        /* 구분 */
+        th:nth-child(3) {
+            width: 250px;
+        }
+
+        /* 법령명 상세 */
+        th:nth-child(4) {
+            width: 150px;
+        }
+
+        /* 개정유형 */
+        th:nth-child(5) {
+            width: 100px;
+            color: #34d399;
+        }
+
+        /* 시행일 */
+        th:nth-child(6) {
+            width: 120px;
+            color: #818cf8;
+        }
+
+        /* 개정유형 */
+        th:nth-child(7) {
+            width: 180px;
+            color: #fbbf24;
+        }
+
+        /* 개정정보 */
+        th:nth-child(8) {
+            width: 120px;
+            color: #a78bfa;
+        }
+
+        /* 개정일 */
+
+        td {
+            padding: 10px 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 0.85rem;
+            vertical-align: middle;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .badge {
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+
+        .badge-law {
+            background: rgba(79, 70, 229, 0.2);
+            color: #818cf8;
+        }
+
+        .badge-decree {
+            background: rgba(16, 185, 129, 0.2);
+            color: #34d399;
+        }
+
+        .badge-rule {
+            background: rgba(245, 158, 11, 0.2);
+            color: #fbbf24;
+        }
+
+        a.detail-link {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        a.detail-link:hover {
+            text-decoration: underline;
+            color: #818cf8;
+        }
+
+        .status-waiting {
+            color: var(--text-dim);
+            font-style: italic;
+            opacity: 0.7;
+        }
+
+        .spinner {
+            width: 14px;
+            height: 14px;
+            border: 2px solid rgba(255, 255, 255, .3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <div class="brand-group">
+                <h1>FTC Law-Navigator</h1>
+                <span class="subtitle">공정거래위원회 소관 법령 실시간 수집 및 관리 도구</span>
+            </div>
+        </header>
+
+        <section class="controls-card">
+            <div class="input-inline">
+                수집 법령 선택
+                <select id="target_cd">
+                    <option value="all">전체 법령 수집</option>
+                    <option value="01">01. 공정거래법</option>
+                    <option value="02">02. 하도급법</option>
+                    <option value="03">03. 약관법</option>
+                    <option value="04">04. 표시광고법</option>
+                    <option value="05">05. 할부거래법</option>
+                    <option value="06">06. 방문판매법</option>
+                    <option value="07">07. 전자상거래법</option>
+                    <option value="08">08. 대규모유통업법</option>
+                    <option value="09">09. 가맹사업법</option>
+                    <option value="10">10. 소비자기본법</option>
+                    <option value="11">11. 대리점법</option>
+                    <option value="12">12. 생협법</option>
+                    <option value="13">13. 제조물책임법</option>
+                    <option value="14">14. 기타</option>
+                </select>
+            </div>
+
+            <button id="btn-scrape" class="btn btn-primary">
+                <i class="fas fa-play"></i> [데이터 수집]
+            </button>
+            <button id="btn-info" class="btn btn-info" disabled>
+                <i class="fas fa-search-plus"></i> [시행/개정 정보 수집]
+            </button>
+            <button id="btn-excel" class="btn btn-success" disabled>
+                <i class="fas fa-file-excel"></i> [엑셀파일 저장]
+            </button>
+            <button id="btn-pdf" class="btn btn-danger" disabled>
+                <i class="fas fa-file-pdf"></i> [법령 PDF 저장]
+            </button>
+            <button id="btn-pdf-download" class="btn" style="background: #f97316; display: none;">
+                <i class="fas fa-download"></i> [PDF 다운로드]
+            </button>
+        </section>
+
+        <section id="progress-section">
+            <div class="progress-info">
+                <span id="current-task">대기 중...</span>
+                <span id="progress-text">0%</span>
+            </div>
+            <div class="progress-container">
+                <div id="progress-bar" class="progress-bar"></div>
+            </div>
+        </section>
+
+        <section class="results-section">
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>법령군</th>
+                            <th>구분</th>
+                            <th>법령명 상세</th>
+                            <th>담당부서</th>
+                            <th>개정유형</th>
+                            <th>시행일</th>
+                            <th>개정정보</th>
+                            <th>개정일</th>
+                        </tr>
+                    </thead>
+                    <tbody id="results-body"></tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        const btnScrape = document.getElementById('btn-scrape');
+        const btnInfo = document.getElementById('btn-info');
+        const btnExcel = document.getElementById('btn-excel');
+        const btnPdf = document.getElementById('btn-pdf');
+        const btnPdfDownload = document.getElementById('btn-pdf-download');
+        const resultsBody = document.getElementById('results-body');
+        const progressSection = document.getElementById('progress-section');
+        const progressBar = document.getElementById('progress-bar');
+        const progressText = document.getElementById('progress-text');
+        const currentTask = document.getElementById('current-task');
+
+        let isPolling = false;
+
+        btnScrape.addEventListener('click', async () => {
+            const target_cd = document.getElementById('target_cd').value;
+            setLoading(btnScrape, true);
+
+            try {
+                const res = await fetch('/api/scrape/start', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ target_cd })
+                });
+                const data = await res.json();
+                if (data.status === 'success') startStatusCheck();
+                else { alert(data.message); setLoading(btnScrape, false); }
+            } catch (err) { alert('오류가 발생했습니다.'); setLoading(btnScrape, false); }
+        });
+
+        btnInfo.addEventListener('click', async () => {
+            setLoading(btnInfo, true);
+            try {
+                const res = await fetch('/api/scrape/info', { method: 'POST' });
+                const data = await res.json();
+                if (data.status === 'success') startStatusCheck();
+                else { alert(data.message); setLoading(btnInfo, false); }
+            } catch (err) { alert('오류가 발생했습니다.'); setLoading(btnInfo, false); }
+        });
+
+        function startStatusCheck() {
+            if (isPolling) return;
+            isPolling = true;
+            progressSection.style.display = 'block';
+
+            const interval = setInterval(async () => {
+                const res = await fetch('/api/scrape/status');
+                const status = await res.json();
+
+                const percent = status.total > 0 ? Math.round((status.progress / status.total) * 100) : 0;
+                progressBar.style.width = percent + '%';
+                progressText.innerText = `${percent}% (${status.progress}/${status.total})`;
+                currentTask.innerText = status.current_category;
+
+                if (!status.is_running) {
+                    clearInterval(interval);
+                    isPolling = false;
+                    loadResults();
+                }
+            }, 1000);
+        }
+
+        async function loadResults() {
+            const res = await fetch('/api/scrape/results');
+            const data = await res.json();
+            renderTable(data);
+
+            const hasData = data.length > 0;
+            setLoading(btnScrape, false);
+            setLoading(btnInfo, false);
+            setLoading(btnExcel, false);
+            setLoading(btnPdf, false);
+            btnInfo.disabled = !hasData;
+            btnExcel.disabled = !hasData;
+            btnPdf.disabled = !hasData;
+
+            // PDF ZIP 다운로드 버튼 상태 확인
+            checkPdfDownloadStatus();
+        }
+
+        async function checkPdfDownloadStatus() {
+            try {
+                const res = await fetch('/api/pdf/status');
+                const status = await res.json();
+                if (status.has_zip) {
+                    btnPdfDownload.style.display = 'inline-flex';
+                    btnPdfDownload.title = status.zip_filename;
+                } else {
+                    btnPdfDownload.style.display = 'none';
+                }
+            } catch (err) {
+                btnPdfDownload.style.display = 'none';
+            }
+        }
+
+        function renderTable(data) {
+            resultsBody.innerHTML = '';
+            data.forEach(item => {
+                const row = document.createElement('tr');
+                let badgeClass = 'badge-law';
+                if (item['구분'].includes('령')) badgeClass = 'badge-decree';
+                if (item['구분'].includes('규칙') || item['구분'].includes('고시')) badgeClass = 'badge-rule';
+
+                const waitClass = (val) => val === '대기중' ? 'status-waiting' : '';
+
+                row.innerHTML = `
+                    <td title="${item['법령명']}">${item['법령명']}</td>
+                    <td><span class="badge ${badgeClass}">${item['구분']}</span></td>
+                    <td class="law-name-col" title="${item['법령명_상세']}">
+                        <a href="${item['팝업페이지링크']}" class="detail-link" target="_blank">
+                            ${item['법령명_상세']}
+                        </a>
+                    </td>
+                    <td title="${item['담당부서']}">${item['담당부서']}</td>
+                    <td class="${waitClass(item['개정유형'])}">${item['개정유형'] || '-'}</td>
+                    <td class="${waitClass(item['시행일'])}">${item['시행일'] || '-'}</td>
+                    <td class="${waitClass(item['개정정보'])}" title="${item['개정정보']}">${item['개정정보'] || '-'}</td>
+                    <td class="${waitClass(item['개정일'])}">${item['개정일'] || '-'}</td>
+                `;
+                resultsBody.appendChild(row);
+            });
+        }
+
+        btnExcel.addEventListener('click', async () => {
+            setLoading(btnExcel, true);
+            try {
+                const res = await fetch('/api/export/excel', { method: 'POST' });
+                const result = await res.json();
+                if (result.status === 'success') {
+                    window.location.href = `/api/download/${result.filename}`;
+                } else {
+                    alert(result.message);
+                }
+            } catch (err) {
+                alert('엑셀 파일 생성 중 오류가 발생했습니다.');
+            } finally {
+                setLoading(btnExcel, false);
+            }
+        });
+
+        btnPdf.addEventListener('click', async () => {
+            setLoading(btnPdf, true);
+            try {
+                const res = await fetch('/api/pdf/save', { method: 'POST' });
+                const result = await res.json();
+                if (result.status === 'success') {
+                    // 작업 시작 성공 시 즉시 상태 체크 폴링 시작
+                    startStatusCheck();
+                } else {
+                    alert(result.message);
+                    setLoading(btnPdf, false);
+                }
+            } catch (err) {
+                alert('PDF 저장 작업 중 오류가 발생했습니다.');
+                setLoading(btnPdf, false);
+            }
+            // finally에서 setLoading(false)를 하지 않는 이유: 
+            // 상태 체크 폴링이 끝나면 loadResults()에서 자동으로 로딩이 해제되기 때문입니다.
+        });
+
+        // PDF ZIP 다운로드 버튼
+        btnPdfDownload.addEventListener('click', () => {
+            window.location.href = '/api/pdf/download';
+        });
+
+        function setLoading(btn, isLoading) {
+            btn.disabled = isLoading;
+            const originalHtml = btn.getAttribute('data-origin') || btn.innerHTML;
+            if (isLoading) {
+                if (!btn.getAttribute('data-origin')) btn.setAttribute('data-origin', originalHtml);
+                btn.innerHTML = '<div class="spinner"></div> 작업 중...';
+            } else {
+                btn.innerHTML = btn.getAttribute('data-origin') || originalHtml;
+            }
+        }
+    </script>
+</body>
+
+</html>

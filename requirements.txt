@@ -1,0 +1,7 @@
+pypdf
+openpyxl
+selenium
+beautifulsoup4
+requests
+pandas
+playwright
