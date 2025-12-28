@@ -34,3 +34,5 @@ output/
 *.zip
 .vscode/
 .idea/
+packages/
+browser_bin/

@@ -115,6 +115,7 @@ def run_info_update_task():
     chrome_options.add_argument('--no-sandbox')
     chrome_options.add_argument('--disable-dev-shm-usage')
     chrome_options.add_argument('--disable-gpu')
+    chrome_options.add_argument('--ignore-certificate-errors')  # SSL 인증서 오류 무시
     chrome_options.add_argument('user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36')
     
     driver = None
@@ -434,10 +435,18 @@ def run_pdf_save_task(target_dir_arg=None):
 
     try:
         with sync_playwright() as p:
-            browser = p.chromium.launch(headless=True)
+            # 폐쇄망 서버용 브라우저 경로 설정 (browser_bin 폴더에 리눅스용 크로뮴 필요)
+            curr_dir = os.path.dirname(os.path.abspath(__file__))
+            browser_path = os.path.join(curr_dir, 'browser_bin', 'chrome-linux', 'chrome')
+            
+            if os.path.exists(browser_path):
+                browser = p.chromium.launch(headless=True, executable_path=browser_path)
+            else:
+                browser = p.chromium.launch(headless=True)
             context = browser.new_context(
                 viewport={'width': 1400, 'height': 900},
-                user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+                user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                ignore_https_errors=True  # SSL 인증서 오류 무시
             )
             
             data_list = scraping_status["data"]
@@ -692,4 +701,5 @@ def run_pdf_save_task(target_dir_arg=None):
             scraping_status["current_category"] = "PDF 저장 완료"
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+    # 서버 배포 시 외부 접속을 허용하기 위해 host='0.0.0.0' 설정
+    app.run(host='0.0.0.0', port=5000, debug=False)

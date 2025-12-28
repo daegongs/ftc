@@ -5,10 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FTC Law-Navigator | 관리 시스템</title>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&family=Noto+Sans+KR:wght@300;400;700&display=swap"
-        rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- 폐쇄망 대응: 외부 폰트 및 아이콘 호출 제거 -->
     <style>
         :root {
             --primary: #4f46e5;
@@ -30,7 +27,7 @@
         }
 
         body {
-            font-family: 'Outfit', 'Noto Sans KR', sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans KR", sans-serif;
             background-color: var(--bg-dark);
             color: var(--text-main);
             line-height: 1.4;
@@ -377,19 +374,19 @@
             </div>
 
             <button id="btn-scrape" class="btn btn-primary">
-                <i class="fas fa-play"></i> [데이터 수집]
+                <span>▶</span> [데이터 수집]
             </button>
             <button id="btn-info" class="btn btn-info" disabled>
-                <i class="fas fa-search-plus"></i> [시행/개정 정보 수집]
+                <span>🔍</span> [시행/개정 정보 수집]
             </button>
             <button id="btn-excel" class="btn btn-success" disabled>
-                <i class="fas fa-file-excel"></i> [엑셀파일 저장]
+                <span>📊</span> [엑셀파일 저장]
             </button>
             <button id="btn-pdf" class="btn btn-danger" disabled>
-                <i class="fas fa-file-pdf"></i> [법령 PDF 저장]
+                <span>📄</span> [법령 PDF 저장]
             </button>
             <button id="btn-pdf-download" class="btn" style="background: #f97316; display: none;">
-                <i class="fas fa-download"></i> [PDF 다운로드]
+                <span>⬇</span> [PDF 다운로드]
             </button>
         </section>
 
@@ -439,6 +436,7 @@
         let isPolling = false;
 
         btnScrape.addEventListener('click', async () => {
+            console.log("데이터 수집 시작 버튼 클릭됨");
             const target_cd = document.getElementById('target_cd').value;
             setLoading(btnScrape, true);
 
