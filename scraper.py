@@ -1,4 +1,4 @@
-import requests
+﻿import requests
 from bs4 import BeautifulSoup
 import urllib3
 
@@ -61,7 +61,7 @@ def scrape_ftc_law_data(search_laword_cl_cd):
     all_law_data = []
     session = requests.Session()
     
-    # FTC 사이트의 실제 key 값 매핑 (select box value → API key)
+    # FTC 사이트의 실제 key 값 매핑 (select box value -> API key)
     KEY_MAPPING = {
         1: 299,   # 공정거래법
         2: 300,   # 하도급법
@@ -79,7 +79,7 @@ def scrape_ftc_law_data(search_laword_cl_cd):
         14: 312,  # 기타 (key=312)
     }
     
-    # FTC 사이트의 searchLawordClCd 매핑 (select box value → URL의 cd 파라미터)
+    # FTC 사이트의 searchLawordClCd 매핑 (select box value -> URL의 cd 파라미터)
     CD_MAPPING = {
         1: 1,     # 공정거래법
         2: 2,     # 하도급법
@@ -98,7 +98,7 @@ def scrape_ftc_law_data(search_laword_cl_cd):
     }
     
     cd_int = int(search_laword_cl_cd)
-    key_val = KEY_MAPPING.get(cd_int, 298 + cd_int)  # 매핑에 없으면 기존 방식
+    key_val = KEY_MAPPING.get(cd_int, 298 + cd_int)  # 매핑이 없으면 기존 방식
     cd_val = CD_MAPPING.get(cd_int, cd_int)  # searchLawordClCd 매핑
     main_page_url = BASE_PAGE_URL.format(key=key_val, cd=f"{cd_val:02d}")
     
@@ -119,7 +119,7 @@ def scrape_ftc_law_data(search_laword_cl_cd):
     tbody = table.find('tbody')
     rows = tbody.find_all('tr') if tbody else table.find_all('tr')
     
-    # 헤더 제외 데이터 행 필터링 (구분 열이 th인 경우가 많으므로 th 필터링 제거)
+    # 헤더 제외 데이터 로우 필터링
     data_rows = [row for row in rows if row.find('td')] # 최소한 td가 하나라도 있는 행만 포함
     
     # 셀 병합(rowspan) 추적용 캐시
@@ -135,12 +135,12 @@ def scrape_ftc_law_data(search_laword_cl_cd):
             "팝업페이지링크": ""
         }
 
-        # td와 th 태그 모두 수집 (공정위는 구분 열에 th를 쓰는 경우가 많음)
+        # td와 th 태그 모두 수집 (공정위는 구분 내에 th를 쓰는 경우가 많음)
         cells = row.find_all(['td', 'th'])
         cell_ptr = 0
         logical_cols = []
         
-        # 논리적 컬럼 구조 (0:구분, 1:법령명_상세, 2:담당부서)
+        # 논리적 컬럼 구조 (0:구분, 1:법령명 상세, 2:담당부서)
         for col_idx in range(3):
             # 이전 행에서 병합된(rowspan) 데이터가 있는지 확인
             if col_idx in rowspan_cache and rowspan_cache[col_idx]["count"] > 0:
