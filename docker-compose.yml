@@ -1,0 +1,13 @@
+services:
+  ftc:
+    build:
+      context: .
+      dockerfile: Dockerfile.ftc
+    container_name: ftc_app
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./output:/app/output
+    env_file:
+      - .env
+    restart: unless-stopped

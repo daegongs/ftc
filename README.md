@@ -43,10 +43,10 @@
 cd ftc
 
 # Docker 컨테이너 빌드 및 실행
-docker-compose up -d
+docker-compose up --build -d
 
 # 브라우저에서 접속
-# http://localhost:8082
+# http://localhost:5000
 ```
 
 ### 방법 2: 로컬 실행
