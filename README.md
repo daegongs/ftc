@@ -57,7 +57,7 @@ pip install -r requirements.txt
 playwright install chromium
 
 # 웹 어플리케이션 실행
-python app.py
+python src/app.py
 
 # 브라우저에서 http://localhost:5000 접속
 ```
@@ -101,10 +101,13 @@ LAW_API_KEY_CORPORATE=your_service_key
 
 ```
 ftc/
-├── app.py                 # Flask 웹 서버 및 메인 비즈니스 로직
-├── scraper.py             # FTC 사이트 법령 목록 스크래핑 엔진
-├── templates/
-│   └── index.html         # 대시보드 웹 페이지
+├── src/                   # 주요 소스코드 및 템플릿
+│   ├── app.py             # Flask 웹 서버 및 메인 비즈니스 로직
+│   ├── scraper.py         # FTC 사이트 법령 목록 스크래핑 엔진
+│   ├── law_scraper.py     # 상세 법령 및 시행일 추출 엔진
+│   ├── extract_links.py   # 링크 추출 유틸리티
+│   └── templates/
+│       └── index.html     # 대시보드 웹 페이지
 ├── output/                # 생성된 엑셀/PDF 결과물 저장소
 ├── .env                   # API 키 설정 파일 (git에서 제외됨)
 ├── requirements.txt       # Python 패키지 의존성

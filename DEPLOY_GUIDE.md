@@ -50,8 +50,8 @@ pip download -d ./packages -r requirements.txt `
 Compress-Archive -Path "C:\Users\USER\projects\ftc\*" -DestinationPath "C:\Users\USER\projects\ftc_deploy_ssl_fix.zip" -Force
 ```
 ```powershell - 변경된 파일만 압축하는 경우
-# app.py와 scraper.py만 골라서 압축
-Compress-Archive -Path "C:\Users\USER\projects\ftc\app.py", "C:\Users\USER\projects\ftc\scraper.py" -DestinationPath "C:\Users\USER\projects\ftc\update.zip" -Force
+# src 폴더 내부의 app.py와 scraper.py만 골라서 압축
+Compress-Archive -Path "C:\Users\USER\projects\ftc\src\app.py", "C:\Users\USER\projects\ftc\src\scraper.py" -DestinationPath "C:\Users\USER\projects\ftc\update.zip" -Force
 ```
 
 ### 2-2. 2단계 전송 (Gateway 경유)
@@ -77,7 +77,7 @@ ssh irteam@dev-laai-ncl
 cd /home1/irteam/projects/
 
 # 기존 앱 및 브라우저 프로세스 종료
-pkill -f "python3 app.py"
+pkill -f "python3 src/app.py"
 pkill -f "chrome"
 
 # 기존 폴더 권한 강제 부여 후 삭제
@@ -113,7 +113,7 @@ chmod +x ./browser_bin/chrome-linux/chrome
 실행 시 외부 접속을 허용(`host='0.0.0.0'`)하도록 설정된 `app.py`를 가동합니다.
 ```bash
 # 백그라운드 실행 (로그 저장)
-nohup python3 app.py > output.log 2>&1 &
+nohup python3 src/app.py > output.log 2>&1 &
 ```
 
 ### 4-2. 상태 확인
